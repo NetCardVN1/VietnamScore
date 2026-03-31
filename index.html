@@ -1,140 +1,107 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vietnam Score Ultra</title>
-
-<style>
-body{margin:0;font-family:Arial;background:#111;color:white}
-header{padding:15px;text-align:center;background:#d32f2f;font-weight:bold}
-.card{background:#1e1e1e;margin:10px;padding:15px;border-radius:15px}
-.score{font-size:30px;font-weight:bold;text-align:center}
-.row{display:flex;justify-content:space-between;margin:5px 0}
-.progress{height:10px;background:#333;border-radius:10px;overflow:hidden}
-.bar{height:100%}
-.vn{background:#4caf50}
-.draw{background:#888}
-.opp{background:#f44336}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vietnam Score Live - FPT Play & Scoreaxis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; font-family: 'Inter', sans-serif; }
+        /* Tùy chỉnh nhẹ để Widget của bạn nổi bật trên nền tối */
+        .widget-container {
+            background: #ffffff; /* Giữ trắng theo code gốc của bạn cho dễ đọc stats */
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 1.5rem;
+        }
+        .video-shadow { box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); }
+    </style>
 </head>
-<body>
+<body class="p-4 md:p-6">
 
-<header>🇻🇳 Vietnam Score Ultra</header>
+    <div class="max-w-6xl mx-auto">
+        <header class="flex justify-between items-center mb-6">
+            <div class="flex items-center gap-3">
+                <div class="bg-red-600 px-3 py-1 rounded text-xs font-bold animate-pulse">LIVE</div>
+                <h1 class="text-xl font-black uppercase tracking-tighter">Vietnam Score</h1>
+            </div>
+            <div class="text-sm text-gray-400">
+                <i class="fa-regular fa-clock mr-1"></i> <span id="current-time"></span>
+            </div>
+        </header>
 
-<div class="card">
-<div id="teams">Loading...</div>
-<div class="score" id="score">--</div>
-</div>
+        <div class="grid lg:grid-cols-3 gap-6">
+            
+            <div class="lg:col-span-2 space-y-6">
+                
+                <div class="relative w-full rounded-2xl overflow-hidden video-shadow bg-black aspect-video border border-gray-800">
+                    <iframe 
+                        class="absolute top-0 left-0 w-full h-full"
+                        src="https://www.youtube.com/live/TgRQUFGLiTY?si=reUuBLy_TgLD96Xk" 
+                        title="Live Stream FPT Bóng Đá Việt" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
 
-<div class="card">
-<h3>⚽ Timeline</h3>
-<div id="events"></div>
-</div>
+                <div class="widget-container shadow-2xl">
+                    <div id="widget-zy2bmneoeg7w" class="scoreaxis-widget" style="width: auto;height: auto;font-size: 14px;background-color: #ffffff;color: #141416;border: 1px solid;border-color: #ecf1f7;overflow: auto;">
+                        <script src="https://widgets.scoreaxis.com/api/football/live-match/67592f989f9d73950005730a?widgetId=zy2bmneoeg7w&lang=en&lineupsBlock=1&eventsBlock=1&statsBlock=1&links=1&font=heebo&fontSize=14&rowDensity=100&widgetWidth=auto&widgetHeight=auto&bodyColor=%23ffffff&textColor=%23141416&linkColor=%23141416&borderColor=%23ecf1f7&tabColor=%23f3f8fd" async></script>
+                        <div class="widget-main-link" style="padding: 6px 12px;font-weight: 500;">
+                            Live data by <a href="https://www.scoreaxis.com/" style="color: inherit;">Scoreaxis</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-<div class="card">
-<h3>📊 Stats</h3>
-<div id="stats"></div>
-</div>
+            <div class="lg:col-span-1 space-y-6">
+                <div class="bg-[#1e293b] p-6 rounded-2xl border border-gray-700 shadow-lg">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h3 class="font-bold text-lg">Ai thắng trận này?</h3>
+                            <p class="text-xs text-gray-500">Tổng cộng: 7.7k bình chọn</p>
+                        </div>
+                        <i class="fa-solid fa-trophy text-blue-500 text-xl"></i>
+                    </div>
 
-<div class="card">
-<h3>🏆 Win Probability</h3>
-<div class="row"><span>🇻🇳</span><span id="vnP">0%</span></div>
-<div class="progress"><div id="vnBar" class="bar vn"></div></div>
+                    <div class="grid grid-cols-3 gap-3">
+                        <button class="flex flex-col items-center gap-2 p-3 bg-gray-800 rounded-xl hover:bg-red-900/30 transition border border-transparent hover:border-red-500">
+                            <img src="https://flagcdn.com/w40/vn.png" class="w-8 rounded-sm shadow">
+                            <span class="font-black text-red-500">73%</span>
+                        </button>
+                        <button class="flex flex-col items-center gap-2 p-3 bg-gray-800 rounded-xl hover:bg-gray-700 transition">
+                            <span class="h-8 flex items-center font-bold text-gray-400">X</span>
+                            <span class="font-black text-gray-400">10%</span>
+                        </button>
+                        <button class="flex flex-col items-center gap-2 p-3 bg-gray-800 rounded-xl hover:bg-yellow-900/30 transition border border-transparent hover:border-yellow-500">
+                            <img src="https://flagcdn.com/w40/my.png" class="w-8 rounded-sm shadow">
+                            <span class="font-black text-yellow-500">17%</span>
+                        </button>
+                    </div>
+                </div>
 
-<div class="row"><span>Hòa</span><span id="drawP">0%</span></div>
-<div class="progress"><div id="drawBar" class="bar draw"></div></div>
+                <div class="bg-gradient-to-br from-blue-900/20 to-purple-900/20 p-6 rounded-2xl border border-blue-500/20">
+                    <h4 class="text-xs font-bold text-blue-400 uppercase mb-3">Thông tin trận đấu</h4>
+                    <ul class="text-sm space-y-3">
+                        <li class="flex justify-between"><span class="text-gray-400">Giải đấu:</span> <span class="font-medium text-right text-xs">Vòng loại Asian Cup 2027</span></li>
+                        <li class="flex justify-between"><span class="text-gray-400">SVĐ:</span> <span class="font-medium text-right text-xs">Mỹ Đình, Việt Nam</span></li>
+                        <li class="flex justify-between"><span class="text-gray-400">Nguồn phát:</span> <span class="font-medium text-red-400 italic">FPT Play</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<div class="row"><span>🇲🇾</span><span id="oppP">0%</span></div>
-<div class="progress"><div id="oppBar" class="bar opp"></div></div>
-</div>
-
-<div class="card">
-<h3>📈 Form gần đây</h3>
-<div id="form"></div>
-</div>
-
-<div class="card">
-<h3>📺 Live</h3>
-<iframe width="100%" height="200" src="https://www.youtube.com/embed/TgRQUFGLiTY"></iframe>
-</div>
-
-<script>
-async function getMatch(){
-const res = await fetch("https://api.allorigins.win/raw?url=https://api.sofascore.com/api/v1/team/7050/events/last/0");
-const data = await res.json();
-const match = data.events[0];
-
-document.getElementById("teams").innerText = `${match.homeTeam.name} vs ${match.awayTeam.name}`;
-document.getElementById("score").innerText = `${match.homeScore.current} - ${match.awayScore.current}`;
-
-loadEvents(match.id);
-loadStats(match.id);
-loadProbability();
-loadForm();
-}
-
-async function loadEvents(id){
-const res = await fetch(`https://api.allorigins.win/raw?url=https://api.sofascore.com/api/v1/event/${id}/incidents`);
-const data = await res.json();
-const box=document.getElementById("events");
-box.innerHTML="";
-
-data.incidents.forEach(e=>{
-const div=document.createElement("div");
-if(e.type==="goal") div.innerText=`⚽ ${e.time}' ${e.player?.name||""}`;
-if(e.type==="card"){
-const icon=e.cardType==="yellow"?"🟨":"🟥";
-div.innerText=`${icon} ${e.time}' ${e.player?.name||""}`;
-}
-box.appendChild(div);
-});
-}
-
-async function loadStats(id){
-const res=await fetch(`https://api.allorigins.win/raw?url=https://api.sofascore.com/api/v1/event/${id}/statistics`);
-const data=await res.json();
-const box=document.getElementById("stats");
-box.innerHTML="";
-
-const stats=data.statistics?.[0]?.groups||[];
-stats.forEach(g=>{
-g.statisticsItems.forEach(s=>{
-const div=document.createElement("div");
-div.innerText=`${s.name}: ${s.home} - ${s.away}`;
-box.appendChild(div);
-});
-});
-}
-
-// giả lập % thắng (do SofaScore không public API này)
-function loadProbability(){
-const vn=70, draw=10, opp=20;
-document.getElementById("vnP").innerText=vn+"%";
-document.getElementById("drawP").innerText=draw+"%";
-document.getElementById("oppP").innerText=opp+"%";
-
-document.getElementById("vnBar").style.width=vn+"%";
-document.getElementById("drawBar").style.width=draw+"%";
-document.getElementById("oppBar").style.width=opp+"%";
-}
-
-// form giả lập
-function loadForm(){
-const form=["W","W","W","W","W"];
-const box=document.getElementById("form");
-box.innerHTML="";
-form.forEach(f=>{
-const span=document.createElement("span");
-span.innerText=f+" ";
-span.style.color=f==="W"?"#4caf50":"#f44336";
-box.appendChild(span);
-});
-}
-
-getMatch();
-setInterval(getMatch,30000);
-</script>
-
+    <script>
+        // Cập nhật giờ hệ thống
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('current-time').innerText = now.toLocaleTimeString('vi-VN');
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+    </script>
 </body>
 </html>
