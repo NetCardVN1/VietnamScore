@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vietnam Score Ultra</title>
+
+<style>
+body{margin:0;font-family:Arial;background:#111;color:white}
+header{padding:15px;text-align:center;background:#d32f2f;font-weight:bold}
+.card{background:#1e1e1e;margin:10px;padding:15px;border-radius:15px}
+.score{font-size:30px;font-weight:bold;text-align:center}
+.row{display:flex;justify-content:space-between;margin:5px 0}
+.progress{height:10px;background:#333;border-radius:10px;overflow:hidden}
+.bar{height:100%}
+.vn{background:#4caf50}
+.draw{background:#888}
+.opp{background:#f44336}
+</style>
+</head>
+<body>
+
+<header>🇻🇳 Vietnam Score Ultra</header>
+
+<div class="card">
+<div id="teams">Loading...</div>
+<div class="score" id="score">--</div>
+</div>
+
+<div class="card">
+<h3>⚽ Timeline</h3>
+<div id="events"></div>
+</div>
+
+<div class="card">
+<h3>📊 Stats</h3>
+<div id="stats"></div>
+</div>
+
+<div class="card">
+<h3>🏆 Win Probability</h3>
+<div class="row"><span>🇻🇳</span><span id="vnP">0%</span></div>
+<div class="progress"><div id="vnBar" class="bar vn"></div></div>
+
+<div class="row"><span>Hòa</span><span id="drawP">0%</span></div>
+<div class="progress"><div id="drawBar" class="bar draw"></div></div>
+
+<div class="row"><span>🇲🇾</span><span id="oppP">0%</span></div>
+<div class="progress"><div id="oppBar" class="bar opp"></div></div>
+</div>
+
+<div class="card">
+<h3>📈 Form gần đây</h3>
+<div id="form"></div>
+</div>
+
+<div class="card">
+<h3>📺 Live</h3>
+<iframe width="100%" height="200" src="https://www.youtube.com/embed/TgRQUFGLiTY"></iframe>
+</div>
+
+<script>
+async function getMatch(){
+const res = await fetch("https://api.allorigins.win/raw?url=https://api.sofascore.com/api/v1/team/7050/events/last/0");
+const data = await res.json();
+const match = data.events[0];
+
+document.getElementById("teams").innerText = `${match.homeTeam.name} vs ${match.awayTeam.name}`;
+document.getElementById("score").innerText = `${match.homeScore.current} - ${match.awayScore.current}`;
+
+loadEvents(match.id);
+loadStats(match.id);
+loadProbability();
+loadForm();
+}
+
+async function loadEvents(id){
+const res = await fetch(`https://api.allorigins.win/raw?url=https://api.sofascore.com/api/v1/event/${id}/incidents`);
+const data = await res.json();
+const box=document.getElementById("events");
+box.innerHTML="";
+
+data.incidents.forEach(e=>{
+const div=document.createElement("div");
+if(e.type==="goal") div.innerText=`⚽ ${e.time}' ${e.player?.name||""}`;
+if(e.type==="card"){
+const icon=e.cardType==="yellow"?"🟨":"🟥";
+div.innerText=`${icon} ${e.time}' ${e.player?.name||""}`;
+}
+box.appendChild(div);
+});
+}
+
+async function loadStats(id){
+const res=await fetch(`https://api.allorigins.win/raw?url=https://api.sofascore.com/api/v1/event/${id}/statistics`);
+const data=await res.json();
+const box=document.getElementById("stats");
+box.innerHTML="";
+
+const stats=data.statistics?.[0]?.groups||[];
+stats.forEach(g=>{
+g.statisticsItems.forEach(s=>{
+const div=document.createElement("div");
+div.innerText=`${s.name}: ${s.home} - ${s.away}`;
+box.appendChild(div);
+});
+});
+}
+
+// giả lập % thắng (do SofaScore không public API này)
+function loadProbability(){
+const vn=70, draw=10, opp=20;
+document.getElementById("vnP").innerText=vn+"%";
+document.getElementById("drawP").innerText=draw+"%";
+document.getElementById("oppP").innerText=opp+"%";
+
+document.getElementById("vnBar").style.width=vn+"%";
+document.getElementById("drawBar").style.width=draw+"%";
+document.getElementById("oppBar").style.width=opp+"%";
+}
+
+// form giả lập
+function loadForm(){
+const form=["W","W","W","W","W"];
+const box=document.getElementById("form");
+box.innerHTML="";
+form.forEach(f=>{
+const span=document.createElement("span");
+span.innerText=f+" ";
+span.style.color=f==="W"?"#4caf50":"#f44336";
+box.appendChild(span);
+});
+}
+
+getMatch();
+setInterval(getMatch,30000);
+</script>
+
+</body>
+</html>
